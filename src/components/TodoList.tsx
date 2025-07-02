@@ -3,7 +3,7 @@ import type { RootState } from "../store/store";
 import TodoItem from "./TodoItem";
 
 const TodoList = () => {
-  const todos = useSelector((state: RootState) => state.todos);
+  const todos = useSelector((state: RootState) => state.todos.todos);
 
   return (
     <ul className="mt-4">
