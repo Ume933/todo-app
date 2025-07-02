@@ -20,7 +20,7 @@ const AddTodo = () => {
         type="text"
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Add new todo"
+        placeholder="Add new todo...."
         className="border p-2 flex-1"
       />
       <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
