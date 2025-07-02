@@ -1,26 +1,53 @@
+// components/TodoItem.tsx
 import { useDispatch } from "react-redux";
-import { toggleTodo, deleteTodo } from "../store/todoSlice";
-import type { AppDispatch } from "../store/store";
-import type { Todo } from "../store/todoSlice";
+import {
+  deleteTodo,
+  toggleComplete,
+  editTodo,
+} from "../store/todoSlice";
+import { useState } from "react";
 
-const TodoItem = ({ todo }: { todo: Todo }) => {
-  const dispatch = useDispatch<AppDispatch>();
+interface Props {
+  id: string;
+  text: string;
+  completed: boolean;
+}
+
+const TodoItem = ({ id, text, completed }: Props) => {
+  const dispatch = useDispatch();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedText, setEditedText] = useState(text);
+
+  const handleEdit = () => {
+    dispatch(editTodo({ id, newText: editedText }));
+    setIsEditing(false);
+  };
 
   return (
-    <li className="flex justify-between items-center p-2 border-b">
-      <span
-        onClick={() => dispatch(toggleTodo(todo.id))}
-        className={`cursor-pointer ${todo.completed ? "line-through text-gray-400" : ""}`}
-      >
-        {todo.text}
-      </span>
-      <button
-        onClick={() => dispatch(deleteTodo(todo.id))}
-        className="text-red-500 hover:text-red-700"
-      >
-        Delete
-      </button>
-    </li>
+    <div>
+      <input
+        type="checkbox"
+        checked={completed}
+        onChange={() => dispatch(toggleComplete(id))}
+      />
+      {isEditing ? (
+        <>
+          <input
+            value={editedText}
+            onChange={(e) => setEditedText(e.target.value)}
+          />
+          <button onClick={handleEdit}>Save</button>
+        </>
+      ) : (
+        <>
+          <span style={{ textDecoration: completed ? "line-through" : "none" }}>
+            {text}
+          </span>
+          <button onClick={() => setIsEditing(true)}>Edit</button>
+        </>
+      )}
+      <button onClick={() => dispatch(deleteTodo(id))}>Delete</button>
+    </div>
   );
 };
 
