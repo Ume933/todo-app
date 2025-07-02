@@ -4,7 +4,7 @@ import type { Todo } from "../store/todoSlice";
 import TodoItem from "./TodoItem";
 
 const TodoList = () => {
-const todos = useSelector((state: RootState) => state.todo.todos);
+const todos = useSelector((state: RootState) => state.todos.todos);
   return (
     <div>
       {todos.map((todo: Todo) => (
