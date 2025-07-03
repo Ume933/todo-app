@@ -4,27 +4,35 @@ import { addTodo } from "../store/todoSlice";
 import type { AppDispatch } from "../store/store";
 
 const AddTodo = () => {
-  const [text, setText] = useState("");
+const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");  
   const dispatch = useDispatch<AppDispatch>();
 
-  const handleSubmit = (e: React.FormEvent) => {
+   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (text.trim() === "") return;
-    dispatch(addTodo(text));
-    setText("");
+    if (title.trim() === "" || description.trim() === "") return;
+    dispatch(addTodo({ title, description }));
+    setTitle("");
+    setDescription("");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 my-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-2 p-4 bg-gray-100 rounded shadow">
       <input
         type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Add your Task"
-        className="border p-2 flex-1"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Title"
+        className="border p-2 rounded"
       />
-      <button type="submit" className="bg-red-500 text-white px-4 py-2 rounded">
-        Added
+      <textarea
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="Description"
+        className="border p-2 rounded"
+      ></textarea>
+      <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+        Add Task
       </button>
     </form>
   );

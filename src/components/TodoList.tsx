@@ -11,7 +11,8 @@ const todos = useSelector((state: RootState) => state.todos.todos);
         <TodoItem
           key={todo.id}
           id={todo.id}
-          text={todo.text}
+          title={todo.title}
+          description={todo.description}
           status={todo.status}
         />
       ))}
