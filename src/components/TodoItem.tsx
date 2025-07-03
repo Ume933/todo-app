@@ -51,8 +51,8 @@ const TodoItem = ({ id, text, status }: Props) => {
                 status === "completed"
                   ? "gray"
                   : status === "in-progress"
-                  ? "orange"
-                  : "black",
+                  ? "red"
+                  : "green",
             }}
           >
             {text}
