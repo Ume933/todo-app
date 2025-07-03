@@ -29,11 +29,12 @@ const todoSlice = createSlice({
     deleteTodo: (state, action: PayloadAction<string>) => {
       state.todos = state.todos.filter((todo) => todo.id !== action.payload);
     },
+
     toggleComplete: (state, action: PayloadAction<string>) => {
       const todo = state.todos.find((t) => t.id === action.payload);
       if (todo) {
         todo.completed = !todo.completed;
-      }
+      } 
     },
     editTodo: (
       state,
