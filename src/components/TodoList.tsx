@@ -12,7 +12,7 @@ const todos = useSelector((state: RootState) => state.todos.todos);
           key={todo.id}
           id={todo.id}
           text={todo.text}
-          completed={todo.completed}
+          status={todo.status}
         />
       ))}
     </div>

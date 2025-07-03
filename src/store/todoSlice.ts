@@ -4,7 +4,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 export type Todo = {
   id: string;
   text: string;
-  completed: boolean;
+  status: "pending" | "in-progress" | "completed" ;
 };
 
 interface TodoState {
@@ -23,7 +23,7 @@ const todoSlice = createSlice({
       state.todos.push({
         id: Date.now().toString(),
         text: action.payload,
-        completed: false,
+        status: "pending",
       });
     },
     deleteTodo: (state, action: PayloadAction<string>) => {
@@ -33,8 +33,7 @@ const todoSlice = createSlice({
     toggleComplete: (state, action: PayloadAction<string>) => {
       const todo = state.todos.find((t) => t.id === action.payload);
       if (todo) {
-        todo.completed = !todo.completed;
-      } 
+         todo.status = todo.status === "completed" ? "pending" : "completed";      } 
     },
     editTodo: (
       state,
@@ -45,10 +44,21 @@ const todoSlice = createSlice({
         todo.text = action.payload.newText;
       }
     },
+ updateStatus: (
+      state,
+      action: PayloadAction<{ id: string; newStatus: "pending" | "in-progress" | "completed" }>
+    ) => {
+      const todo = state.todos.find((t) => t.id === action.payload.id);
+      if (todo) {
+        todo.status = action.payload.newStatus;
+      }
+    },
+
+
   },
 });
 
-export const { addTodo, deleteTodo, toggleComplete, editTodo } =
+export const { addTodo, deleteTodo, toggleComplete, editTodo, updateStatus } =
   todoSlice.actions;
 
 export default todoSlice.reducer;
