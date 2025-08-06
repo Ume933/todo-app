@@ -1,32 +1,48 @@
-import { useDispatch } from "react-redux";
-import {
-  deleteTodo,
-  toggleComplete,
-  editTodo,
-  updateStatus,
-} from "../store/todoSlice";
+import { useAppDispatch } from "../store/hooks";
+import { deleteTodo, updateTodo } from "../store/todoSlice";
 import { useState } from "react";
+import type { Todo } from "../types/todo";
 
 interface Props {
   id: string;
   title: string;
   description: string;
-  status: "pending" | "in-progress" | "completed";
+  status: Todo["status"];
 }
 
 const TodoItem = ({ id, title, description, status }: Props) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedDescription, setEditedDescription] = useState(description);
 
   const handleEdit = () => {
-    dispatch(editTodo({ id, newTitle: editedTitle, newDescription: editedDescription }));
+    dispatch(
+      updateTodo({
+        id,
+        updatedFields: {
+          title: editedTitle,
+          description: editedDescription,
+        },
+      })
+    );
     setIsEditing(false);
   };
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch(updateStatus({ id, newStatus: e.target.value as "pending" | "in-progress" | "completed" }));
+    dispatch(
+      updateTodo({
+        id,
+        updatedFields: {
+          status: e.target.value as Todo["status"],
+        },
+      })
+    );
+  };
+
+  const handleToggleComplete = () => {
+    const newStatus = status === "completed" ? "pending" : "completed";
+    dispatch(updateTodo({ id, updatedFields: { status: newStatus } }));
   };
 
   return (
@@ -35,11 +51,12 @@ const TodoItem = ({ id, title, description, status }: Props) => {
         <input
           type="checkbox"
           checked={status === "completed"}
-          onChange={() => dispatch(toggleComplete(id))}
+          onChange={handleToggleComplete}
           className="mr-2"
         />
+
         {isEditing ? (
-          <>
+          <div className="flex flex-col w-full">
             <input
               value={editedTitle}
               onChange={(e) => setEditedTitle(e.target.value)}
@@ -50,12 +67,17 @@ const TodoItem = ({ id, title, description, status }: Props) => {
               value={editedDescription}
               onChange={(e) => setEditedDescription(e.target.value)}
               placeholder="Description"
-              className="border p-1 rounded"
+              className="border p-1 rounded mb-1"
             />
-            <button onClick={handleEdit} className="bg-blue-500 text-white px-2 py-1 rounded mt-1">Save</button>
-          </>
+            <button
+              onClick={handleEdit}
+              className="bg-blue-500 text-white px-2 py-1 rounded mt-1 self-start"
+            >
+              Save
+            </button>
+          </div>
         ) : (
-          <div>
+          <div className="flex-grow">
             <strong
               style={{
                 textDecoration: status === "completed" ? "line-through" : "none",
@@ -82,15 +104,31 @@ const TodoItem = ({ id, title, description, status }: Props) => {
             >
               {description}
             </p>
-            <button onClick={() => setIsEditing(true)} className="bg-blue-500 text-white px-2 py-1 rounded mr-2">Edit</button>
+            <button
+              onClick={() => setIsEditing(true)}
+              className="bg-blue-500 text-white px-2 py-1 rounded mr-2"
+            >
+              Edit
+            </button>
           </div>
         )}
-        <select value={status} onChange={handleStatusChange} className="ml-auto border p-1 rounded">
+
+        <select
+          value={status}
+          onChange={handleStatusChange}
+          className="ml-auto border p-1 rounded"
+        >
           <option value="pending">Pending</option>
           <option value="in-progress">In Progress</option>
           <option value="completed">Completed</option>
         </select>
-        <button onClick={() => dispatch(deleteTodo(id))} className="bg-red-500 text-white px-2 py-1 rounded ml-2">Delete</button>
+
+        <button
+          onClick={() => dispatch(deleteTodo(id))}
+          className="bg-red-500 text-white px-2 py-1 rounded ml-2"
+        >
+          Delete
+        </button>
       </div>
     </div>
   );

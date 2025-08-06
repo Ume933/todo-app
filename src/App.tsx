@@ -1,15 +1,27 @@
-import AddTodo from "./components/AddTodo";
-import TodoList from "./components/TodoList";
+// App.tsx
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm";
+import Dashboard from "./components/Dashboard";
+import PrivateRoute from "./components/PrivateRoute";
 
 const App = () => {
   return (
-     <div className="min-h-screen bg-green-100 p-8 flex flex-col items-center">
-      <h1 className="text-8xl font-bold mb-6 text-blue-600">TODO List</h1>
-
-      <AddTodo />
-      <h1 className="text-8xl font-bold mb-6 text-blue-600">Tasks</h1>
-      <TodoList />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LoginForm />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<RegisterForm />} />
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute allowedRoles={['user', 'admin', 'super-admin']}>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+      </Routes>
+    </Router>
   );
 };
 

@@ -1,14 +1,30 @@
-import { useSelector } from "react-redux";
-import type { RootState } from "../store/store";
-import type { Todo } from "../store/todoSlice";
+// Dashboard.tsx or TodoList.tsx
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTodos } from "../store/todoSlice";
+import type { RootState, AppDispatch } from "../store/store";
 import TodoItem from "./TodoItem";
 
-const TodoList = () => {
-const todos = useSelector((state: RootState) => state.todos.todos);
+ const TodoList = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { todos, loading, error } = useSelector((state: RootState) => state.todo);
+
+  useEffect(() => {
+    console.log("dispatching fetchtodos");
+    dispatch(fetchTodos());
+  }, [dispatch]);
+
+  // const handleDelete = (id: string) => {
+  //   dispatch(deleteTodo(id));
+  // };
+
   return (
     <div>
-      {todos.map((todo: Todo) => (
-        <TodoItem
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error}</p>}
+
+      {todos.map((todo) => (
+         <TodoItem 
           key={todo.id}
           id={todo.id}
           title={todo.title}
@@ -19,5 +35,4 @@ const todos = useSelector((state: RootState) => state.todos.todos);
     </div>
   );
 };
-
 export default TodoList;
