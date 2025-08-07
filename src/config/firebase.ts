@@ -1,7 +1,6 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+import { getAuth,connectAuthEmulator } from "firebase/auth";
+
 const firebaseConfig = {
   apiKey: "AIzaSyC_ixHwSDvPUu-N56GPRBLhSrOQv_e06Bs",
   authDomain: "todo-app-17814.firebaseapp.com",
@@ -14,5 +13,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+if (location.hostname === "localhost") {
+  connectAuthEmulator(auth, "http://localhost:9099");
+}
 
 export { auth };

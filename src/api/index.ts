@@ -3,7 +3,7 @@ import type { Todo } from "../types/todo";
 import { getAuth } from "firebase/auth";
 import type { User } from "../types/user"; // Create this type if it doesn't exist
 
-const API_BASE_URL = "http://localhost:4000/api";
+const API_BASE_URL = "http://localhost:5051/api";
 
 const getAuthHeader = async () => {
   const user = getAuth().currentUser;
